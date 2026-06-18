@@ -56,11 +56,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'workflex_backend.wsgi.application'
 
 
-# Database Configuration (Default SQLite use kar rahe hain)
+# Database Configuration (Fixed for Python 3.14 & Django Backend)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.backends.sqlite3',
-        'LOCATION': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
