@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkFlex - Premium Enterprise Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Base Deep Cyber Theme */
+        body { 
+            background: radial-gradient(circle at 50% 0%, #111827 0%, #070a13 100%);
+            color: #ffffff; 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphic Navbar */
+        .navbar { 
+            background: rgba(17, 24, 39, 0.75); 
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+            padding: 1rem 2rem;
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #22d3ee, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Showcase Section */
+        .hero-section {
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+            padding: 4rem 0 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .glowing-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #ffffff, #93c5fd, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        /* System Stat Counters */
+        .stat-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        /* High-End Tech Grid Cards */
+        .project-card { 
+            background: rgba(17, 24, 39, 0.6); 
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 16px; 
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-column: justify;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .project-card:hover { 
+            transform: translateY(-5px); 
+            border-color: #3b82f6; 
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+        }
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Bright Typo Hierarchy */
+        .card-budget {
+            background: rgba(6, 182, 212, 0.15);
+            color: #22d3ee;
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            font-weight: 700;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .card-title {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.35rem;
+            margin-top: 1.2rem;
+        }
+        .card-desc {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Premium Buttons */
+        .btn-action-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: #ffffff; font-weight: 600; border: none; border-radius: 10px;
+            padding: 0.6rem 1.2rem; transition: all 0.2s;
+        }
+        .btn-action-primary:hover {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); transform: translateY(-1px); color: #ffffff;
+        }
+        .btn-card-outline {
+            background: transparent;
+            border: 2px solid #374151;
+            color: #f3f4f6;
+            font-weight: 600;
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .project-card:hover .btn-card-outline {
+            border-color: #22d3ee;
+            background: rgba(6, 182, 212, 0.05);
+            color: #22d3ee;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark mb-2">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{% url 'home' %}">WorkFlex</a>
+        <div class="ms-auto d-flex align-items-center gap-3">
+            {% if user.is_authenticated %}
+                <span class="text-white small d-none d-sm-inline">Authorized Role: <strong style="color: #22d3ee;">{{ user.username }} ({{ user.profile.role|capfirst }})</strong></span>
+                {% if user.profile.role == 'client' %}
+                    <a href="{% url 'create_project' %}" class="btn btn-action-primary">+ Post Project</a>
+                    <a href="{% url 'my_projects' %}" class="btn btn-sm btn-outline-light px-3" style="border-radius:10px;">My Area</a>
+                {% else %}
+                    <a href="{% url 'my_bids' %}" class="btn btn-sm btn-outline-light px-3" style="border-radius:10px;">My Bids</a>
+                {% endif %}
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-danger px-3" style="border-radius:10px;">Disconnect</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary px-3">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-action-primary">Get Access</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<div class="hero-section mb-5">
+    <div class="container">
+        <div class="mb-3">
+            <span class="stat-badge"><span class="live-dot"></span> Next-Gen Freelancing Network Live</span>
+        </div>
+        <h1 class="glowing-title">Decentralized Service Marketplace</h1>
+        <p class="mx-auto style-desc" style="max-width: 600px; color: #cbd5e1; font-size: 1.1rem;">
+            Securely deploy system architecture requests or place optimized engineering bids on enterprise contracts.
+        </p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row g-4">
+        {% for project in projects %}
+            <div class="col-md-6 col-lg-4">
+                <div class="project-card d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="card-budget">Budget: ${% if project.budget %}{{ project.budget }}{% else %}0.00{% endif %}</span>
+                            <small style="color: #38bdf8; font-weight: 500;">{{ project.created_at|timesince }} ago</small>
+                        </div>
+                        
+                        <h4 class="card-title">{{ project.title }}</h4>
+                        <p class="card-desc">{{ project.description|truncatewords:25 }}</p>
+                    </div>
+                    
+                    <div style="position: relative; z-index: 2;">
+                        <a href="{% url 'project_detail' project.pk %}" class="btn btn-card-outline text-center">Open Execution Room</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="p-5 rounded-4" style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1);">
+                    <p class="text-white fs-5 mb-0">No active network protocols found. Click "+ Post Project" to initialize the database.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

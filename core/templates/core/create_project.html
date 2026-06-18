@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Project - WorkFlex</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #0b0f19; 
+            color: #ffffff; 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            padding: 20px;
+        }
+        .form-card { 
+            background: #111827; 
+            border: 2px solid #3b82f6; /* Strong Blue Border */
+            border-radius: 20px; 
+            padding: 3rem; 
+            width: 100%; 
+            max-width: 650px; 
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2); /* Soft blue glow */
+        }
+        /* Style for Form Labels - Now Pure White & Bold */
+        .form-label {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        /* Style for Input Boxes - High contrast with white text and border */
+        .form-control { 
+            background-color: #1f2937 !important; 
+            border: 2px solid #4b5563 !important; /* Visible light border */
+            color: #ffffff !important; 
+            padding: 0.85rem 1rem; 
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        .form-control:focus { 
+            background-color: #1f2937 !important; 
+            color: #ffffff !important; 
+            border-color: #06b6d4 !important; /* Glowing cyan border on click */
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4) !important; 
+            outline: none;
+        }
+        /* Placeholders are now bright light gray instead of dark invisible gray */
+        .form-control::placeholder {
+            color: #94a3b8 !important;
+            opacity: 1;
+        }
+        /* Premium Buttons */
+        .btn-publish {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: #ffffff;
+            font-weight: 600;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .btn-publish:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(6, 182, 212, 0.4);
+            color: #ffffff;
+        }
+        .btn-cancel {
+            background-color: transparent;
+            color: #f3f4f6;
+            border: 2px solid #4b5563;
+            font-weight: 600;
+            padding: 0.85rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .btn-cancel:hover {
+            background-color: #374151;
+            color: #ffffff;
+            border-color: #94a3b8;
+        }
+        .glowing-headline {
+            background: linear-gradient(to right, #ffffff, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-card">
+    <h2 class="fw-bold mb-1 glowing-headline">Deploy New Project Matrix</h2>
+    <p style="color: #38bdf8; font-size: 0.9rem;" class="mb-4 fw-medium">Post a fresh requirement set directly to the WorkFlex developer pool.</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="form-label">PROJECT TITLE</label>
+            <input type="text" name="title" class="form-control" placeholder="e.g., Build Multi-Vendor E-Commerce Platform" required>
+        </div>
+        
+        <div class="mb-4">
+            <label class="form-label">TECHNICAL BLUEPRINT (DESCRIPTION)</label>
+            <textarea name="description" rows="5" class="form-control" placeholder="Describe the scope of work, features, and core technologies required..." required></textarea>
+        </div>
+        
+        <div class="mb-5">
+            <label class="form-label">ALLOCATION BUDGET ($ USD)</label>
+            <input type="number" name="budget" class="form-control" placeholder="e.g., 1500" required>
+        </div>
+        
+        <div class="d-flex gap-3">
+            <a href="{% url 'home' %}" class="btn btn-cancel w-50">Cancel</a>
+            <button type="submit" class="btn btn-publish w-50">Publish Live Gig</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

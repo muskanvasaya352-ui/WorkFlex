@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details - WorkFlex</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            background: radial-gradient(circle at 50% 0%, #111827 0%, #070a13 100%);
+            color: #ffffff; 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+        .navbar { 
+            background: rgba(17, 24, 39, 0.85); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+        }
+        .detail-card {
+            background: #111827;
+            border: 2px solid #3b82f6;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+        }
+        .proposal-card {
+            background: #1f2937;
+            border: 2px solid #06b6d4;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /* CRITICAL HIGHLIGHTS FOR AUTO-GENERATED FORM FIELDS (NO GRAY)      */
+        /* ----------------------------------------------------------------- */
+        .proposal-card p, 
+        .proposal-card label, 
+        .proposal-card form {
+            color: #ffffff !important; /* Pure bold white labels */
+            font-weight: 700 !important;
+            text-align: left !important;
+            display: block !important;
+            margin-bottom: 6px !important;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        .proposal-card input, 
+        .proposal-card textarea {
+            background-color: #111827 !important;
+            border: 2px solid #ffffff !important; /* Pure White High-Contrast Borders */
+            color: #06b6d4 !important; /* Glowing text color inside fields */
+            padding: 0.85rem !important;
+            border-radius: 8px !important;
+            width: 100% !important;
+            display: block !important;
+            font-weight: 600 !important;
+            margin-bottom: 15px !important;
+        }
+        .proposal-card input:focus, 
+        .proposal-card textarea:focus {
+            border-color: #06b6d4 !important;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.5) !important;
+            outline: none;
+        }
+        /* ----------------------------------------------------------------- */
+
+        /* Bids List View Styling */
+        .bid-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 15px;
+        }
+        .btn-inject {
+            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+            color: #ffffff !important;
+            font-weight: 700;
+            border: none;
+            padding: 0.85rem;
+            border-radius: 10px;
+            width: 100%;
+            text-transform: uppercase;
+        }
+        .badge-budget {
+            background: rgba(34, 211, 238, 0.15);
+            color: #22d3ee;
+            border: 1px solid rgba(34, 211, 238, 0.4);
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark mb-5 p-3">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-white fs-3" href="{% url 'home' %}">WorkFlex</a>
+        <a href="{% url 'home' %}" class="btn btn-sm btn-outline-light px-3" style="border-radius: 8px;">← Back to Grid</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="detail-card">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <span class="badge-budget">Allocation: ${{ project.budget }}</span>
+                    <span style="color: #38bdf8; font-weight: 600;">Posted {{ project.created_at|timesince }} ago</span>
+                </div>
+                <h2 class="fw-bold text-white mb-3">{{ project.title }}</h2>
+                <hr style="border-color: rgba(255,255,255,0.15);">
+                <h5 class="text-info fw-semibold mb-2">Technical Specifications:</h5>
+                <p style="color: #e2e8f0; font-size: 1.05rem; line-height: 1.7; text-align: left;">{{ project.description }}</p>
+                <p class="mt-4 mb-0 style-desc" style="color: #94a3b8; font-size: 0.9rem;">
+                    Origin Operator ID: <strong class="text-white">{{ project.client.username }}</strong>
+                </p>
+            </div>
+
+            <div class="detail-card mt-4">
+                <h4 class="fw-bold text-white mb-4">Incoming Engine Bids ({{ bids.count }})</h4>
+                {% for bid in bids %}
+                    <div class="bid-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-white" style="font-size: 1.1rem;">Operator: {{ bid.freelancer.username }}</span>
+                            <span class="badge {% if bid.status == 'Accepted' %}bg-success{% elif bid.status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} px-3 py-2 fw-bold">
+                                {{ bid.status }}
+                            </span>
+                        </div>
+                        <p class="m-0 text-start" style="color: #22d3ee; font-weight: 700; font-size: 1.05rem;">Proposal Budget: ${{ bid.amount }}</p>
+                        <p class="mt-2 mb-3 text-start style-desc" style="color: #cbd5e1;">{{ bid.proposal }}</p>
+
+                        {% if project.client == user and bid.status == 'Pending' %}
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'update_bid_status' bid.id 'accept' %}" class="btn btn-sm btn-success px-4 fw-bold">Accept Proposal</a>
+                                <a href="{% url 'update_bid_status' bid.id 'reject' %}" class="btn btn-sm btn-danger px-4 fw-bold">Reject</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p style="color: #94a3b8;" class="m-0 py-3">No engineering nodes have injected bid protocols into this network block yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="proposal-card">
+                <h3 class="fw-bold text-white mb-2">Submit Proposal</h3>
+                <p style="color: #22d3ee !important; font-weight: 500 !important; text-transform: none; font-size: 0.9rem;" class="mb-4">Inject your optimization bid protocol parameters below.</p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    {{ form.as_p }}
+                    
+                    <button type="submit" class="btn btn-inject mt-2">Inject Bid Protocol</button>
+                </form>
+            </div>
+            
+            <div class="detail-card mt-4 p-3" style="border: 1px dashed rgba(6,182,212,0.3);">
+                <h6 class="text-white fw-bold mb-2">💬 Secure Live Chat Protocol</h6>
+                <div class="p-2 rounded mb-2 text-start" style="background: rgba(0,0,0,0.2); font-size: 0.85rem;">
+                    <span style="color:#22d3ee; font-weight:700;">Client:</span> <span style="color:#ffffff;">Hey, can you deliver by tomorrow?</span>
+                </div>
+                <div class="p-2 rounded text-start" style="background: rgba(0,0,0,0.2); font-size: 0.85rem;">
+                    <span style="color:#a855f7; font-weight:700;">Freelancer:</span> <span style="color:#ffffff;">Yes, system architectures are ready for deployment.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
